@@ -16,7 +16,7 @@ jobs:
       - name: Get file content
         id: get_file_content
         run: |
-          files=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
+          files=$(git diff --name-only ${{ github.event.before }} ${{ github.after }})
           content=$(cat $files | head -n 1)
           echo "::set-output name=content::$content"
         
