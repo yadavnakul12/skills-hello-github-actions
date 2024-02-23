@@ -38,11 +38,21 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const response = JSON.parse('${{ steps.call_api.outputs.response }}');
-            const content = '${{ steps.get_file_content.outputs.content }}';
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `The file content is: ${content} and the activity is: ${response.activity}`
-            });
+            const response = context.payload.workflow.jobs.call-api.outputs.response;
+            const content = context.payload.workflow.jobs.get-file-content.outputs.content;
+            if (response) {
+              const responseBody = JSON.parse(response);
+              github.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `The file content is: ${content} and the activity is: ${responseBody.activity}`
+              });
+            } else {
+              github.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `The API response is empty.`
+              });
+            }
