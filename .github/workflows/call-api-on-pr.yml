@@ -23,7 +23,7 @@ jobs:
       - name: Call API
         id: call_api
         run: |
-          response=$(curl -X GET -H "Content-Type: application/json" https://www.boredapi.com/api/activity)
+          response=$(curl -X GET -H "Content-Type: application/yaml" https://www.boredapi.com/api/activity)
           echo "::set-output name=response::$response"
       
       - name: Comment on PR
