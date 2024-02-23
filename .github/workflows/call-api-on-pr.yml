@@ -1,0 +1,11 @@
+name: Call API
+on:
+  pull_request:
+    types: [opened]
+permissions:
+  pull-requests: write
+jobs:
+  call-api:
+    name: Call API - Job
+    runs-on: ubuntu-latest
+    
