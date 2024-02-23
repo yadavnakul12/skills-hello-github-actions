@@ -38,8 +38,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const response = context.payload.workflow.jobs.call-api.outputs.response;
-            const content = context.payload.workflow.jobs.get-file-content.outputs.content;
+            const response = steps.call-api.outputs.response;
+            const content = steps.get-file-content.outputs.content;
             if (response) {
               const responseBody = JSON.parse(response);
               github.issues.createComment({
