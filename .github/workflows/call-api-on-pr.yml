@@ -9,3 +9,34 @@ jobs:
     name: Call API - Job
     runs-on: ubuntu-latest
     
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get file content
+        id: get_file_content
+        run: |
+          files=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
+          content=$(cat $files | head -n 1)
+          echo "::set-output name=content::$content"
+        
+      - name: Call API
+        id: call_api
+        run: |
+          response=$(curl -X GET -H "Content-Type: application/json" https://www.boredapi.com/api/activity)
+          echo "::set-output name=response::$response"
+      
+      - name: Comment on PR
+        if: ${{ always() }}
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const response = JSON.parse('${{ steps.call_api.outputs.response }}');
+            const content = '${{ steps.get_file_content.outputs.content }}';
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `The file content is: ${content} and the activity is: ${response.activity}`
+            });
