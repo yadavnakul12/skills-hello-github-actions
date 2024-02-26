@@ -24,13 +24,13 @@ jobs:
         id: call_api
         run: |
           response=$(curl -X GET -H "Content-Type: application/yaml" https://www.boredapi.com/api/activity)
-          http_code=$(echo "$response" | awk -F 'HTTP-CODE:' '{print $2}')
-          response_body=$(echo "$response" | awk -F 'HTTP-CODE:' '{print $1}')
-          if [ $http_code -eq 200 ]; then
+          # http_code=$(echo "$response" | awk -F 'HTTP-CODE:' '{print $2}')
+          # response_body=$(echo "$response" | awk -F 'HTTP-CODE:' '{print $1}')
+          # if [ $http_code -eq 200 ]; then
             echo "::set-output name=response::$response"
-          else
-            echo "::set-output name=response::API request failed with HTTP status code $http_code"
-          fi
+          # else
+          #   echo "::set-output name=response::API request failed with HTTP status code $http_code"
+          # fi
       
       - name: Comment on PR
         if: ${{ always() }}
